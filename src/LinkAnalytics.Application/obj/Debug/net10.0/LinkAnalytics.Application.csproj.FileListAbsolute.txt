@@ -13,3 +13,4 @@ D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.A
 D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\refint\LinkAnalytics.Application.dll
 D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.pdb
 D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\ref\LinkAnalytics.Application.dll
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.sourcelink.json

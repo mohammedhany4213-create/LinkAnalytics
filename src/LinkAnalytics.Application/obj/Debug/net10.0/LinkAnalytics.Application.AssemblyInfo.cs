@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LinkAnalytics.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a5ecb72e65d8ed0cbd5f96646631699bdfbcbd6")]
 [assembly: System.Reflection.AssemblyProductAttribute("LinkAnalytics.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LinkAnalytics.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

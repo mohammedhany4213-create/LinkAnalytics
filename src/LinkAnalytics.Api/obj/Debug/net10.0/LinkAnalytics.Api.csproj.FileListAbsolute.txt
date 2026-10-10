@@ -17,3 +17,4 @@ D:\LinkAnalytics\src\LinkAnalytics.Api\obj\Debug\net10.0\LinkAnalytics.Api.dll
 D:\LinkAnalytics\src\LinkAnalytics.Api\obj\Debug\net10.0\refint\LinkAnalytics.Api.dll
 D:\LinkAnalytics\src\LinkAnalytics.Api\obj\Debug\net10.0\LinkAnalytics.Api.pdb
 D:\LinkAnalytics\src\LinkAnalytics.Api\obj\Debug\net10.0\ref\LinkAnalytics.Api.dll
+D:\LinkAnalytics\src\LinkAnalytics.Api\obj\Debug\net10.0\LinkAnalytics.Api.sourcelink.json

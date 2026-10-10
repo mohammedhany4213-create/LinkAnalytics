@@ -9,3 +9,4 @@ D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain
 D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\refint\LinkAnalytics.Domain.dll
 D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain.pdb
 D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\ref\LinkAnalytics.Domain.dll
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain.sourcelink.json
