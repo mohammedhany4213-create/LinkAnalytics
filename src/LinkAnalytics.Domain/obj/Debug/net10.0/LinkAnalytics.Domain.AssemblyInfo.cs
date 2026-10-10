@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LinkAnalytics.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9a5ecb72e65d8ed0cbd5f96646631699bdfbcbd6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b68493aa205e45e5f6cf0fc6c7f24a6d2eecf14")]
 [assembly: System.Reflection.AssemblyProductAttribute("LinkAnalytics.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LinkAnalytics.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
