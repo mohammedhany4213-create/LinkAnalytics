@@ -1,0 +1,11 @@
+D:\LinkAnalytics\src\LinkAnalytics.Domain\bin\Debug\net10.0\LinkAnalytics.Domain.deps.json
+D:\LinkAnalytics\src\LinkAnalytics.Domain\bin\Debug\net10.0\LinkAnalytics.Domain.dll
+D:\LinkAnalytics\src\LinkAnalytics.Domain\bin\Debug\net10.0\LinkAnalytics.Domain.pdb
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain.AssemblyInfoInputs.cache
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain.AssemblyInfo.cs
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain.csproj.CoreCompileInputs.cache
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain.dll
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\refint\LinkAnalytics.Domain.dll
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\LinkAnalytics.Domain.pdb
+D:\LinkAnalytics\src\LinkAnalytics.Domain\obj\Debug\net10.0\ref\LinkAnalytics.Domain.dll

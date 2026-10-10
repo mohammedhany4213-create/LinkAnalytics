@@ -1,0 +1,15 @@
+D:\LinkAnalytics\src\LinkAnalytics.Application\bin\Debug\net10.0\LinkAnalytics.Application.deps.json
+D:\LinkAnalytics\src\LinkAnalytics.Application\bin\Debug\net10.0\LinkAnalytics.Application.dll
+D:\LinkAnalytics\src\LinkAnalytics.Application\bin\Debug\net10.0\LinkAnalytics.Application.pdb
+D:\LinkAnalytics\src\LinkAnalytics.Application\bin\Debug\net10.0\LinkAnalytics.Domain.dll
+D:\LinkAnalytics\src\LinkAnalytics.Application\bin\Debug\net10.0\LinkAnalytics.Domain.pdb
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.csproj.AssemblyReference.cache
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.AssemblyInfoInputs.cache
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.AssemblyInfo.cs
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.csproj.CoreCompileInputs.cache
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnal.61B4F4C6.Up2Date
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.dll
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\refint\LinkAnalytics.Application.dll
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\LinkAnalytics.Application.pdb
+D:\LinkAnalytics\src\LinkAnalytics.Application\obj\Debug\net10.0\ref\LinkAnalytics.Application.dll
