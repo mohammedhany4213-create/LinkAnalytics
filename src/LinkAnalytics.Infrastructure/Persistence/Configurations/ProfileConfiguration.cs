@@ -2,7 +2,7 @@ using LinkAnalytics.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders ;
 
-namespace LinkAnalytics.Infrastructure.Persistence.Configuration;
+namespace LinkAnalytics.Infrastructure.Persistence.Configurations;
 
 public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
 {
