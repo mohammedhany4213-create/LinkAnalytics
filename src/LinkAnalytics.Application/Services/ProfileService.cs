@@ -1,3 +1,4 @@
+using LinkAnalytics.Application.DTOs.Links;
 using LinkAnalytics.Application.DTOs.Profiles;
 using LinkAnalytics.Application.Interfaces;
 using LinkAnalytics.Domain.Entities;
@@ -10,13 +11,17 @@ public sealed class ProfileService(ILinkAnalyticsRepository repository) : IProfi
         CreateProfileRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (!await repository.UserExistsAsync(request.UserId, cancellationToken))
+        if (request.UserId <= 0 ||
+            string.IsNullOrWhiteSpace(request.Slug) ||
+            string.IsNullOrWhiteSpace(request.Title) ||
+            !await repository.UserExistsAsync(request.UserId, cancellationToken))
+        {
             return null;
+        }
 
         var slug = request.Slug.Trim().ToLowerInvariant();
 
-        if (string.IsNullOrWhiteSpace(slug) ||
-            await repository.SlugExistsAsync(slug, cancellationToken))
+        if (await repository.SlugExistsAsync(slug, cancellationToken))
             return null;
 
         var profile = new Profile
@@ -29,12 +34,7 @@ public sealed class ProfileService(ILinkAnalyticsRepository repository) : IProfi
 
         await repository.AddProfileAsync(profile, cancellationToken);
 
-        return new ProfileResponse(
-            profile.ProfileId,
-            profile.Slug,
-            profile.Title,
-            profile.Bio,
-            profile.ViewsCount);
+        return MapToResponse(profile);
     }
 
     public async Task<ProfileResponse?> GetBySlugAsync(
@@ -48,13 +48,22 @@ public sealed class ProfileService(ILinkAnalyticsRepository repository) : IProfi
             slug.Trim().ToLowerInvariant(),
             cancellationToken);
 
-        return profile is null
-            ? null
-            : new ProfileResponse(
-                profile.ProfileId,
-                profile.Slug,
-                profile.Title,
-                profile.Bio,
-                profile.ViewsCount);
+        return profile is null ? null : MapToResponse(profile);
     }
+
+    private static ProfileResponse MapToResponse(Profile profile) =>
+        new(
+            profile.ProfileId,
+            profile.Slug,
+            profile.Title,
+            profile.Bio,
+            profile.ViewsCount,
+            profile.Links
+                .OrderBy(link => link.Order)
+                .Select(link => new LinkResponse(
+                    link.LinkId,
+                    link.Title,
+                    link.Url,
+                    link.Order))
+                .ToArray());
 }

@@ -21,6 +21,7 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
         CancellationToken cancellationToken = default) =>
         dbContext.Profiles
             .AsNoTracking()
+            .Include(profile => profile.Links)
             .FirstOrDefaultAsync(profile => profile.Slug == slug, cancellationToken);
 
     public Task<bool> UserOwnsProfileAsync(

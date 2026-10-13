@@ -1,3 +1,5 @@
+using LinkAnalytics.Application.DTOs.Links;
+
 namespace LinkAnalytics.Application.DTOs.Profiles;
 
 public sealed record ProfileResponse(
@@ -5,4 +7,5 @@ public sealed record ProfileResponse(
     string Slug,
     string Title,
     string Bio,
-    long ViewsCount);
+    long ViewsCount,
+    IReadOnlyCollection<LinkResponse> Links);
