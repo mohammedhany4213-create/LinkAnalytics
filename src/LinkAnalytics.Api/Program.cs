@@ -1,11 +1,18 @@
+using LinkAnalytics.Application;
 using LinkAnalytics.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default")!);
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? throw new InvalidOperationException("Connection string 'Default' was not found.");
+
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(connectionString);
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.MapGet("/", () => "LinkAnalytics API is running");
+app.MapGet("/", () => Results.Ok(new { message = "LinkAnalytics API is running" }));
+app.MapControllers();
 
 app.Run();
