@@ -61,6 +61,19 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task IncrementProfileViewsAsync(
+        string slug,
+        CancellationToken cancellationToken = default)
+    {
+        await dbContext.Profiles
+            .Where(profile => profile.Slug == slug)
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(
+                    profile => profile.ViewsCount,
+                    profile => profile.ViewsCount + 1),
+                cancellationToken);
+    }
+
     public async Task<string?> TrackClickAndGetDestinationAsync(
         int linkId,
         CancellationToken cancellationToken = default)
@@ -81,7 +94,9 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
         var updatedRows = await dbContext.LinkCountryClicks
             .Where(click => click.LinkId == linkId && click.Country == "XX")
             .ExecuteUpdateAsync(
-                setters => setters.SetProperty(click => click.Clicks, click => click.Clicks + 1),
+                setters => setters.SetProperty(
+                    click => click.Clicks,
+                    click => click.Clicks + 1),
                 cancellationToken);
 
         if (updatedRows == 0)

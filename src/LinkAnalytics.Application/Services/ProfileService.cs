@@ -44,8 +44,12 @@ public sealed class ProfileService(ILinkAnalyticsRepository repository) : IProfi
         if (string.IsNullOrWhiteSpace(slug))
             return null;
 
+        var normalizedSlug = slug.Trim().ToLowerInvariant();
+
+        await repository.IncrementProfileViewsAsync(normalizedSlug, cancellationToken);
+
         var profile = await repository.GetProfileBySlugAsync(
-            slug.Trim().ToLowerInvariant(),
+            normalizedSlug,
             cancellationToken);
 
         return profile is null ? null : MapToResponse(profile);

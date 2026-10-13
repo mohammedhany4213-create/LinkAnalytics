@@ -18,6 +18,8 @@ public interface ILinkAnalyticsRepository
 
     Task AddLinkAsync(Link link, CancellationToken cancellationToken = default);
 
+    Task IncrementProfileViewsAsync(string slug, CancellationToken cancellationToken = default);
+
     Task<string?> TrackClickAndGetDestinationAsync(
         int linkId,
         CancellationToken cancellationToken = default);
