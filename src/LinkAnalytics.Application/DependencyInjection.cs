@@ -10,6 +10,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<ILinkService, LinkService>();
+        services.AddScoped<IClickTrackingService, ClickTrackingService>();
 
         return services;
     }

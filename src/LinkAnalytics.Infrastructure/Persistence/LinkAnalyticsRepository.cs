@@ -1,3 +1,4 @@
+using System.Data;
 using LinkAnalytics.Application.Interfaces;
 using LinkAnalytics.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -58,5 +59,47 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
     {
         await dbContext.Links.AddAsync(link, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<string?> TrackClickAndGetDestinationAsync(
+        int linkId,
+        CancellationToken cancellationToken = default)
+    {
+        await using var transaction = await dbContext.Database.BeginTransactionAsync(
+            IsolationLevel.Serializable,
+            cancellationToken);
+
+        var link = await dbContext.Links
+            .AsNoTracking()
+            .Where(item => item.LinkId == linkId)
+            .Select(item => new { item.Url })
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (link is null)
+            return null;
+
+        var updatedRows = await dbContext.LinkCountryClicks
+            .Where(click => click.LinkId == linkId && click.Country == "XX")
+            .ExecuteUpdateAsync(
+                setters => setters.SetProperty(click => click.Clicks, click => click.Clicks + 1),
+                cancellationToken);
+
+        if (updatedRows == 0)
+        {
+            await dbContext.LinkCountryClicks.AddAsync(
+                new LinkCountryClick
+                {
+                    LinkId = linkId,
+                    Country = "XX",
+                    Clicks = 1
+                },
+                cancellationToken);
+
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        await transaction.CommitAsync(cancellationToken);
+
+        return link.Url;
     }
 }
