@@ -1,6 +1,7 @@
 using LinkAnalytics.Application.Interfaces;
 using LinkAnalytics.Application.Services;
 using Moq;
+using Xunit;
 
 namespace LinkAnalytics.Application.Tests.Services;
 
