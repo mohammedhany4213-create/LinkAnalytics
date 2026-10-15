@@ -29,6 +29,18 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
     public Task<bool> UserOwnsProfileAsync(int profileId, int userId, CancellationToken cancellationToken = default) =>
         dbContext.Profiles.AnyAsync(profile => profile.ProfileId == profileId && profile.UserId == userId, cancellationToken);
 
+    public Task<Link?> GetLinkAnalyticsForUserAsync(
+        int linkId,
+        int userId,
+        CancellationToken cancellationToken = default) =>
+        dbContext.Links
+            .AsNoTracking()
+            .Include(link => link.Profile)
+            .Include(link => link.CountryClicks)
+            .FirstOrDefaultAsync(
+                link => link.LinkId == linkId && link.Profile.UserId == userId,
+                cancellationToken);
+
     public async Task<int> GetNextLinkOrderAsync(int profileId, CancellationToken cancellationToken = default)
     {
         var currentMaxOrder = await dbContext.Links.Where(link => link.ProfileId == profileId)
