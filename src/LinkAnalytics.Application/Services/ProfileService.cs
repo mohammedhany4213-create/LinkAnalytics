@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using LinkAnalytics.Application.DTOs.Links;
 using LinkAnalytics.Application.DTOs.Profiles;
 using LinkAnalytics.Application.Interfaces;
@@ -7,19 +8,29 @@ namespace LinkAnalytics.Application.Services;
 
 public sealed class ProfileService(ILinkAnalyticsRepository repository) : IProfileService
 {
+    private static readonly Regex SlugPattern = new(
+        "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
     public async Task<ProfileResponse?> CreateAsync(
         CreateProfileRequest request,
         CancellationToken cancellationToken = default)
     {
         if (request.UserId <= 0 ||
             string.IsNullOrWhiteSpace(request.Slug) ||
-            string.IsNullOrWhiteSpace(request.Title) ||
-            !await repository.UserExistsAsync(request.UserId, cancellationToken))
-        {
+            string.IsNullOrWhiteSpace(request.Title))
             return null;
-        }
 
         var slug = request.Slug.Trim().ToLowerInvariant();
+        var title = request.Title.Trim();
+        var bio = request.Bio?.Trim() ?? string.Empty;
+
+        if (slug.Length > 50 ||
+            !SlugPattern.IsMatch(slug) ||
+            title.Length > 100 ||
+            bio.Length > 500 ||
+            !await repository.UserExistsAsync(request.UserId, cancellationToken))
+            return null;
 
         if (await repository.SlugExistsAsync(slug, cancellationToken))
             return null;
@@ -28,8 +39,8 @@ public sealed class ProfileService(ILinkAnalyticsRepository repository) : IProfi
         {
             UserId = request.UserId,
             Slug = slug,
-            Title = request.Title.Trim(),
-            Bio = request.Bio?.Trim() ?? string.Empty
+            Title = title,
+            Bio = bio
         };
 
         await repository.AddProfileAsync(profile, cancellationToken);
@@ -45,14 +56,15 @@ public sealed class ProfileService(ILinkAnalyticsRepository repository) : IProfi
             return null;
 
         var normalizedSlug = slug.Trim().ToLowerInvariant();
+        var profile = await repository.GetProfileBySlugAsync(normalizedSlug, cancellationToken);
+
+        if (profile is null)
+            return null;
 
         await repository.IncrementProfileViewsAsync(normalizedSlug, cancellationToken);
+        profile.ViewsCount++;
 
-        var profile = await repository.GetProfileBySlugAsync(
-            normalizedSlug,
-            cancellationToken);
-
-        return profile is null ? null : MapToResponse(profile);
+        return MapToResponse(profile);
     }
 
     private static ProfileResponse MapToResponse(Profile profile) =>
