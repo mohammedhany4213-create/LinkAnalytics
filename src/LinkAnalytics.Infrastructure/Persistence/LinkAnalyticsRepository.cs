@@ -76,6 +76,7 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
 
     public async Task<string?> TrackClickAndGetDestinationAsync(
         int linkId,
+        string countryCode,
         CancellationToken cancellationToken = default)
     {
         await using var transaction = await dbContext.Database.BeginTransactionAsync(
@@ -92,7 +93,7 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
             return null;
 
         var updatedRows = await dbContext.LinkCountryClicks
-            .Where(click => click.LinkId == linkId && click.Country == "XX")
+            .Where(click => click.LinkId == linkId && click.Country == countryCode)
             .ExecuteUpdateAsync(
                 setters => setters.SetProperty(
                     click => click.Clicks,
@@ -105,7 +106,7 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
                 new LinkCountryClick
                 {
                     LinkId = linkId,
-                    Country = "XX",
+                    Country = countryCode,
                     Clicks = 1
                 },
                 cancellationToken);
