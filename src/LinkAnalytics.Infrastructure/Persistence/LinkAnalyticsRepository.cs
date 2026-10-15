@@ -84,6 +84,31 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
         return (currentMaxOrder ?? 0) + 1;
     }
 
+    public async Task<bool> ReorderLinksAsync(
+        int profileId,
+        int userId,
+        IReadOnlyList<int> linkIds,
+        CancellationToken cancellationToken = default)
+    {
+        var links = await dbContext.Links
+            .Where(link => link.ProfileId == profileId && link.Profile.UserId == userId)
+            .ToListAsync(cancellationToken);
+
+        if (links.Count != linkIds.Count ||
+            links.Select(link => link.LinkId).ToHashSet().SetEquals(linkIds) is false)
+            return false;
+
+        var orderById = linkIds
+            .Select((id, index) => new { id, order = index + 1 })
+            .ToDictionary(item => item.id, item => item.order);
+
+        foreach (var link in links)
+            link.Order = orderById[link.LinkId];
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
     public async Task AddProfileAsync(Profile profile, CancellationToken cancellationToken = default)
     {
         await dbContext.Profiles.AddAsync(profile, cancellationToken);
