@@ -64,4 +64,19 @@ public sealed class LinkService(ILinkAnalyticsRepository repository) : ILinkServ
         linkId <= 0 || userId <= 0
             ? Task.FromResult(false)
             : repository.DeleteLinkAsync(linkId, userId, cancellationToken);
+
+    public Task<bool> ReorderAsync(
+        int profileId,
+        int userId,
+        ReorderLinksRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        if (profileId <= 0 || userId <= 0 || request?.LinkIds is null ||
+            request.LinkIds.Count == 0 ||
+            request.LinkIds.Any(id => id <= 0) ||
+            request.LinkIds.Distinct().Count() != request.LinkIds.Count)
+            return Task.FromResult(false);
+
+        return repository.ReorderLinksAsync(profileId, userId, request.LinkIds, cancellationToken);
+    }
 }
