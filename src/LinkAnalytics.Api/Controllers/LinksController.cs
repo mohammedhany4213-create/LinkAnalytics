@@ -14,8 +14,11 @@ public sealed class LinksController(IClickTrackingService clickTrackingService) 
         int linkId,
         CancellationToken cancellationToken)
     {
+        var countryCode = Request.Headers["CF-IPCountry"].ToString();
+
         var destination = await clickTrackingService.TrackAndGetDestinationAsync(
             linkId,
+            countryCode,
             cancellationToken);
 
         return destination is null ? NotFound() : Redirect(destination);
