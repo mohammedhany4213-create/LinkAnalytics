@@ -11,6 +11,7 @@ public static class DependencyInjection
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<ILinkService, LinkService>();
         services.AddScoped<IClickTrackingService, ClickTrackingService>();
+        services.AddScoped<ILinkAnalyticsService, LinkAnalyticsService>();
 
         return services;
     }
