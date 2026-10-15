@@ -10,7 +10,8 @@ namespace LinkAnalytics.Api.Controllers;
 [Route("api/links")]
 public sealed class LinksController(
     IClickTrackingService clickTrackingService,
-    ILinkService linkService) : ControllerBase
+    ILinkService linkService,
+    ILinkAnalyticsService linkAnalyticsService) : ControllerBase
 {
     [HttpPost]
     [Authorize]
@@ -32,6 +33,26 @@ public sealed class LinksController(
             return BadRequest(new { message = "Link data is invalid or the profile does not belong to the current user." });
 
         return Created($"/api/links/{link.LinkId}/redirect", link);
+    }
+
+    [HttpGet("{linkId:int}/analytics")]
+    [Authorize]
+    [ProducesResponseType<LinkAnalyticsResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<LinkAnalyticsResponse>> GetAnalytics(
+        int linkId,
+        CancellationToken cancellationToken)
+    {
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
+
+        var analytics = await linkAnalyticsService.GetLinkAnalyticsAsync(
+            linkId,
+            userId,
+            cancellationToken);
+
+        return analytics is null ? NotFound() : Ok(analytics);
     }
 
     [HttpGet("{linkId:int}/redirect")]
