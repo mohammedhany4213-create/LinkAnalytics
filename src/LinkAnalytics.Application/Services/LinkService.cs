@@ -12,25 +12,28 @@ public sealed class LinkService(ILinkAnalyticsRepository repository) : ILinkServ
     {
         if (request.ProfileId <= 0 ||
             request.UserId <= 0 ||
-            string.IsNullOrWhiteSpace(request.Title) ||
-            !Uri.TryCreate(request.Url, UriKind.Absolute, out var uri) ||
-            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-        {
+            string.IsNullOrWhiteSpace(request.Title))
             return null;
-        }
+
+        var title = request.Title.Trim();
+
+        if (title.Length > 100 ||
+            string.IsNullOrWhiteSpace(request.Url) ||
+            request.Url.Length > 2048 ||
+            !Uri.TryCreate(request.Url.Trim(), UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            return null;
 
         if (!await repository.UserOwnsProfileAsync(
                 request.ProfileId,
                 request.UserId,
                 cancellationToken))
-        {
             return null;
-        }
 
         var link = new Link
         {
             ProfileId = request.ProfileId,
-            Title = request.Title.Trim(),
+            Title = title,
             Url = uri.ToString(),
             Order = await repository.GetNextLinkOrderAsync(
                 request.ProfileId,
