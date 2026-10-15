@@ -22,6 +22,9 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
     public Task<bool> SlugExistsAsync(string slug, CancellationToken cancellationToken = default) =>
         dbContext.Profiles.AnyAsync(profile => profile.Slug == slug, cancellationToken);
 
+    public Task<bool> SlugExistsForAnotherProfileAsync(string slug, int profileId, CancellationToken cancellationToken = default) =>
+        dbContext.Profiles.AnyAsync(profile => profile.Slug == slug && profile.ProfileId != profileId, cancellationToken);
+
     public Task<Profile?> GetProfileBySlugAsync(string slug, CancellationToken cancellationToken = default) =>
         dbContext.Profiles.AsNoTracking().Include(profile => profile.Links)
             .FirstOrDefaultAsync(profile => profile.Slug == slug, cancellationToken);
@@ -29,45 +32,48 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
     public Task<bool> UserOwnsProfileAsync(int profileId, int userId, CancellationToken cancellationToken = default) =>
         dbContext.Profiles.AnyAsync(profile => profile.ProfileId == profileId && profile.UserId == userId, cancellationToken);
 
-    public Task<Link?> GetLinkAnalyticsForUserAsync(
-        int linkId,
-        int userId,
-        CancellationToken cancellationToken = default) =>
-        dbContext.Links
-            .AsNoTracking()
-            .Include(link => link.Profile)
-            .Include(link => link.CountryClicks)
-            .FirstOrDefaultAsync(
-                link => link.LinkId == linkId && link.Profile.UserId == userId,
-                cancellationToken);
+    public Task<Link?> GetLinkAnalyticsForUserAsync(int linkId, int userId, CancellationToken cancellationToken = default) =>
+        dbContext.Links.AsNoTracking().Include(link => link.Profile).Include(link => link.CountryClicks)
+            .FirstOrDefaultAsync(link => link.LinkId == linkId && link.Profile.UserId == userId, cancellationToken);
 
-    public async Task<bool> UpdateLinkAsync(
-        int linkId,
-        int userId,
-        string title,
-        string url,
+    public async Task<bool> UpdateProfileAsync(
+        int profileId, int userId, string slug, string title, string bio,
         CancellationToken cancellationToken = default)
     {
-        var affectedRows = await dbContext.Links
-            .Where(link => link.LinkId == linkId && link.Profile.UserId == userId)
-            .ExecuteUpdateAsync(
-                setters => setters
-                    .SetProperty(link => link.Title, title)
-                    .SetProperty(link => link.Url, url),
-                cancellationToken);
+        var affectedRows = await dbContext.Profiles
+            .Where(profile => profile.ProfileId == profileId && profile.UserId == userId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(profile => profile.Slug, slug)
+                .SetProperty(profile => profile.Title, title)
+                .SetProperty(profile => profile.Bio, bio), cancellationToken);
 
         return affectedRows > 0;
     }
 
-    public async Task<bool> DeleteLinkAsync(
-        int linkId,
-        int userId,
-        CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteProfileAsync(int profileId, int userId, CancellationToken cancellationToken = default)
+    {
+        var affectedRows = await dbContext.Profiles
+            .Where(profile => profile.ProfileId == profileId && profile.UserId == userId)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        return affectedRows > 0;
+    }
+
+    public async Task<bool> UpdateLinkAsync(int linkId, int userId, string title, string url, CancellationToken cancellationToken = default)
+    {
+        var affectedRows = await dbContext.Links
+            .Where(link => link.LinkId == linkId && link.Profile.UserId == userId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(link => link.Title, title)
+                .SetProperty(link => link.Url, url), cancellationToken);
+        return affectedRows > 0;
+    }
+
+    public async Task<bool> DeleteLinkAsync(int linkId, int userId, CancellationToken cancellationToken = default)
     {
         var affectedRows = await dbContext.Links
             .Where(link => link.LinkId == linkId && link.Profile.UserId == userId)
             .ExecuteDeleteAsync(cancellationToken);
-
         return affectedRows > 0;
     }
 
