@@ -15,6 +15,12 @@ public sealed class AuthService(
 {
     public async Task<AuthResponse?> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken)
     {
+        if (request is null ||
+            string.IsNullOrWhiteSpace(request.Name) ||
+            string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Password))
+            throw new ArgumentException("Name, email, and password are required.");
+
         var name = request.Name.Trim();
         var email = request.Email.Trim().ToLowerInvariant();
 
@@ -35,7 +41,17 @@ public sealed class AuthService(
 
     public async Task<AuthResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken)
     {
+        if (request is null ||
+            string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Password) ||
+            request.Password.Length is < 8 or > 128)
+            return null;
+
         var email = request.Email.Trim().ToLowerInvariant();
+
+        if (!IsValidEmail(email))
+            return null;
+
         var user = await repository.GetUserByEmailAsync(email, cancellationToken);
 
         if (user is null)
