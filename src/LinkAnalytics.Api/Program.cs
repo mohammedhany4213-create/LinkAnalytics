@@ -43,11 +43,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.MapGet("/", () => Results.Ok(new { message = "LinkAnalytics API is running" }));
+if (app.Environment.IsDevelopment())
+    app.MapOpenApi();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
