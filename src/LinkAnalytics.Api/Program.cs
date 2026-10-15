@@ -3,7 +3,6 @@ using LinkAnalytics.Application;
 using LinkAnalytics.Application.Interfaces;
 using LinkAnalytics.Api.Services;
 using LinkAnalytics.Infrastructure;
-using LinkAnalytics.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
