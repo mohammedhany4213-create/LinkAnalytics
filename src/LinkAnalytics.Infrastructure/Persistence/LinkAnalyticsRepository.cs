@@ -41,6 +41,36 @@ public sealed class LinkAnalyticsRepository(AppDbContext dbContext) : ILinkAnaly
                 link => link.LinkId == linkId && link.Profile.UserId == userId,
                 cancellationToken);
 
+    public async Task<bool> UpdateLinkAsync(
+        int linkId,
+        int userId,
+        string title,
+        string url,
+        CancellationToken cancellationToken = default)
+    {
+        var affectedRows = await dbContext.Links
+            .Where(link => link.LinkId == linkId && link.Profile.UserId == userId)
+            .ExecuteUpdateAsync(
+                setters => setters
+                    .SetProperty(link => link.Title, title)
+                    .SetProperty(link => link.Url, url),
+                cancellationToken);
+
+        return affectedRows > 0;
+    }
+
+    public async Task<bool> DeleteLinkAsync(
+        int linkId,
+        int userId,
+        CancellationToken cancellationToken = default)
+    {
+        var affectedRows = await dbContext.Links
+            .Where(link => link.LinkId == linkId && link.Profile.UserId == userId)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        return affectedRows > 0;
+    }
+
     public async Task<int> GetNextLinkOrderAsync(int profileId, CancellationToken cancellationToken = default)
     {
         var currentMaxOrder = await dbContext.Links.Where(link => link.ProfileId == profileId)
