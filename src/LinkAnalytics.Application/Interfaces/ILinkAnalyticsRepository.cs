@@ -22,5 +22,6 @@ public interface ILinkAnalyticsRepository
 
     Task<string?> TrackClickAndGetDestinationAsync(
         int linkId,
+        string countryCode,
         CancellationToken cancellationToken = default);
 }
