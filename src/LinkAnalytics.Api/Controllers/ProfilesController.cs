@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using LinkAnalytics.Application.DTOs.Profiles;
+using LinkAnalytics.Application.DTOs.Links;
 using LinkAnalytics.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace LinkAnalytics.Api.Controllers;
 
 [ApiController]
 [Route("api/profiles")]
-public sealed class ProfilesController(IProfileService profileService) : ControllerBase
+public sealed class ProfilesController(IProfileService profileService, ILinkService linkService) : ControllerBase
 {
     [HttpPost]
     [Authorize]
@@ -58,6 +59,27 @@ public sealed class ProfilesController(IProfileService profileService) : Control
 
         var deleted = await profileService.DeleteAsync(profileId, userId, cancellationToken);
         return deleted ? NoContent() : NotFound();
+    }
+
+    [HttpPut("{profileId:int}/links/order")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ReorderLinks(
+        int profileId,
+        ReorderLinksRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (!int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+            return Unauthorized();
+
+        var reordered = await linkService.ReorderAsync(profileId, userId, request, cancellationToken);
+        if (!reordered)
+            return BadRequest(new { message = "The profile or links are invalid, or the profile does not belong to the current user." });
+
+        return NoContent();
     }
 
     [HttpGet("{slug}")]
