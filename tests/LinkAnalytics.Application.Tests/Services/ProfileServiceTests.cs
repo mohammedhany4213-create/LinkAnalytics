@@ -58,4 +58,36 @@ public sealed class ProfileServiceTests
                 p.Bio == "About me"),
             It.IsAny<CancellationToken>()), Times.Once);
     }
+
+    [Fact]
+    public async Task UpdateAsync_WhenSlugIsTakenByAnotherProfile_ReturnsFalse()
+    {
+        var repository = new Mock<ILinkAnalyticsRepository>();
+        repository.Setup(x => x.SlugExistsForAnotherProfileAsync(
+                "taken-name", 10, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        var service = new ProfileService(repository.Object);
+
+        var result = await service.UpdateAsync(
+            10, 5, new UpdateProfileRequest("taken-name", "My Profile", null));
+
+        Assert.False(result);
+        repository.Verify(x => x.UpdateProfileAsync(
+            It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(),
+            It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WhenIdentifiersAreInvalid_DoesNotCallRepository()
+    {
+        var repository = new Mock<ILinkAnalyticsRepository>(MockBehavior.Strict);
+        var service = new ProfileService(repository.Object);
+
+        var result = await service.DeleteAsync(0, 5);
+
+        Assert.False(result);
+        repository.VerifyNoOtherCalls();
+    }
 }
