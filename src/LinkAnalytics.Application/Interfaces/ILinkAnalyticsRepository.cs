@@ -11,6 +11,8 @@ public interface ILinkAnalyticsRepository
     Task<Profile?> GetProfileBySlugAsync(string slug, CancellationToken cancellationToken = default);
     Task<bool> UserOwnsProfileAsync(int profileId, int userId, CancellationToken cancellationToken = default);
     Task<Link?> GetLinkAnalyticsForUserAsync(int linkId, int userId, CancellationToken cancellationToken = default);
+    Task<bool> UpdateLinkAsync(int linkId, int userId, string title, string url, CancellationToken cancellationToken = default);
+    Task<bool> DeleteLinkAsync(int linkId, int userId, CancellationToken cancellationToken = default);
     Task<int> GetNextLinkOrderAsync(int profileId, CancellationToken cancellationToken = default);
     Task AddProfileAsync(Profile profile, CancellationToken cancellationToken = default);
     Task AddLinkAsync(Link link, CancellationToken cancellationToken = default);
