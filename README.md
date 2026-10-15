@@ -109,6 +109,16 @@ Protected endpoints require:
 Authorization: Bearer <jwt-token>
 ```
 
+## Tests
+
+Run the automated application unit tests:
+
+```powershell
+dotnet test
+```
+
+The current test suite covers click-country normalization, link analytics calculations, and profile creation validation.
+
 ## Analytics notes
 
 - Profile views are incremented when the public profile endpoint is requested.
