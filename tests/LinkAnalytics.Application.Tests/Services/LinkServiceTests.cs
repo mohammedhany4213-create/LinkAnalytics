@@ -90,15 +90,18 @@ public sealed class LinkServiceTests
     {
         var repository = new Mock<ILinkAnalyticsRepository>();
         repository.Setup(x => x.UpdateLinkAsync(
-                10, 5, "Website", "https://example.com", It.IsAny<CancellationToken>()))
+                10, 5, "Website", "https://example.com/path", It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         var service = new LinkService(repository.Object);
 
         var result = await service.UpdateAsync(
-            10, 5, new UpdateLinkRequest(" Website ", "https://example.com"));
+            10, 5, new UpdateLinkRequest(" Website ", "https://example.com/path"));
 
         Assert.True(result);
+        repository.Verify(x => x.UpdateLinkAsync(
+            10, 5, "Website", "https://example.com/path", It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
