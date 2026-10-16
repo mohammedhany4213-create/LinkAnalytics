@@ -59,7 +59,7 @@ public sealed class SqlServerRepositoryTests
         var click = await verificationContext.LinkCountryClicks
             .SingleAsync(item => item.LinkId == linkId && item.Country == "EG");
 
-        Assert.Equal(concurrentClicks, click.Clicks);
+        Assert.Equal((long)concurrentClicks, click.Clicks);
     }
 
     [SqlServerFact]
