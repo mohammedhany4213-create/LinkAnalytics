@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
+using Xunit;
 
 namespace LinkAnalytics.Application.Tests.Api;
 
