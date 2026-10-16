@@ -90,6 +90,18 @@ public sealed class ApiIntegrationTests
 
     private sealed class LinkAnalyticsApiFactory : WebApplicationFactory<Program>
     {
+        static LinkAnalyticsApiFactory()
+        {
+            // Minimal hosting reads configuration before ConfigureWebHost callbacks are applied.
+            // Set test-only environment variables before Program creates the application builder.
+            Environment.SetEnvironmentVariable("Jwt__Key", JwtKey);
+            Environment.SetEnvironmentVariable("Jwt__Issuer", "LinkAnalytics");
+            Environment.SetEnvironmentVariable("Jwt__Audience", "LinkAnalytics.Client");
+            Environment.SetEnvironmentVariable(
+                "ConnectionStrings__Default",
+                "Server=(localdb)\\mssqllocaldb;Database=LinkAnalyticsApiTests;Trusted_Connection=True;TrustServerCertificate=True");
+        }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureAppConfiguration((_, configuration) =>
