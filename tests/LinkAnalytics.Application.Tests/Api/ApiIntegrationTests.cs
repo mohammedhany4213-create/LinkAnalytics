@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using LinkAnalytics.Application.DTOs.Links;
 using LinkAnalytics.Application.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
