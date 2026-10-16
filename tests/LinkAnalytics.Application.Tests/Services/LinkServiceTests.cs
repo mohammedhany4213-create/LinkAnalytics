@@ -131,7 +131,7 @@ public sealed class LinkServiceTests
     {
         var repository = new Mock<ILinkAnalyticsRepository>();
         repository.Setup(x => x.ReorderLinksAsync(
-                4, 8, It.Is<IReadOnlyList<int>>(ids => ids.SequenceEqual([3, 1, 2])),
+                4, 8, It.Is<IReadOnlyList<int>>(ids => ids.SequenceEqual(new[] { 3, 1, 2 })),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
