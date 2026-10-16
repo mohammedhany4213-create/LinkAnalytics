@@ -74,6 +74,43 @@ When running in the Development environment, the OpenAPI document is available a
 /openapi/v1.json
 ```
 
+## Production deployment
+
+The API can be built as a Linux container. Production configuration must be supplied through environment variables or your hosting provider's secret manager; never commit production credentials.
+
+Required production settings:
+
+| Environment variable | Purpose |
+| --- | --- |
+| `ASPNETCORE_ENVIRONMENT` | Set to `Production` |
+| `ASPNETCORE_HTTP_PORTS` | Container HTTP port; defaults to `8080` |
+| `ConnectionStrings__Default` | Remote SQL Server connection string |
+| `Jwt__Key` | Random signing key of at least 32 bytes |
+| `Jwt__Issuer` | Expected JWT issuer |
+| `Jwt__Audience` | Expected JWT audience |
+
+Production startup rejects missing JWT settings, short signing keys, and local SQL Server connection strings. Keep TLS termination at your hosting platform or reverse proxy and expose the API through HTTPS. The `/health` endpoint is available for container/platform health checks. OpenAPI remains disabled outside Development.
+
+Build the container image from the repository root:
+
+```powershell
+docker build -t linkanalytics-api .
+```
+
+Run it by supplying secrets at runtime (replace the placeholders with values from your hosting provider):
+
+```powershell
+docker run --rm -p 8080:8080 `
+  -e ASPNETCORE_ENVIRONMENT=Production `
+  -e ConnectionStrings__Default="$env:LINKANALYTICS_PRODUCTION_CONNECTION" `
+  -e Jwt__Key="$env:LINKANALYTICS_JWT_KEY" `
+  -e Jwt__Issuer="https://api.example.com" `
+  -e Jwt__Audience="linkanalytics-client" `
+  linkanalytics-api
+```
+
+Apply database migrations as a controlled deployment step before routing traffic to a new release. Do not automatically run migrations from every API instance at startup. Back up the production database before applying schema changes.
+
 ## API overview
 
 ### Authentication
