@@ -111,13 +111,26 @@ Authorization: Bearer <jwt-token>
 
 ## Tests
 
-Run the automated application unit tests:
+Run the complete automated test suite:
 
 ```powershell
 dotnet test
 ```
 
-The current test suite covers click-country normalization, link analytics calculations, and profile creation validation.
+The test suite includes:
+
+- **Application unit tests** for click-country normalization, analytics calculations, link creation and updates, link ordering validation, and profile creation, update, and deletion.
+- **API integration tests** using ASP.NET Core's test server for unauthenticated access, invalid login, JWT-protected endpoints, and API validation responses.
+- **SQL Server repository integration tests** for applying migrations, verifying the relational model and unique indexes, concurrent click aggregation, and link reordering.
+
+The SQL Server tests require a SQL Server instance with permission to create and drop databases. They are skipped when `LINKANALYTICS_TEST_SQLSERVER` is not set. For a local SQL Server Express instance, run:
+
+```powershell
+$env:LINKANALYTICS_TEST_SQLSERVER = "Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;TrustServerCertificate=True"
+dotnet test
+```
+
+Each repository test creates an isolated temporary database, applies the project's migrations, and deletes the database when the test completes. Do not point this variable at a production SQL Server instance.
 
 ## Analytics notes
 
